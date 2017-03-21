@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pothole service requests</title>
+        <style>
+            p, h1 {font-family: helvetica;}
+            p {font-size:1.5em;line-height:1.5em; margin-left: 24px;}
+            pre {font-size: 2em;}
+            div { border: 10px solid black; margin: 4px; border-radius: 5px; background-color: orange}
+            body {background-color:skyblue;}
+            #title {color:purple;}
+        </style>
+    </head>
+    <body>
+    <h1 id="title">Pot Hole Service Requests</h1>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        /*
+            This script retrieves 311 pot hole service request data for 
+            from the 
+            City of Chicago Data Portal
+            
+            This script doesn't update the DOM.
+
+        */
+
+        // base URL to the food inspections data
+        var baseURL = 'https://data.cityofchicago.org/resource/787j-mys9.json';
+        
+        // optional filters we're appending - status
+        var filters = '?status=Open&zip=60618';
+        
+        // full URL
+        var url = baseURL + filters;
+        
+        console.log (url);
+        
+        $(
+            // jQuery command to retrieve json data
+            
+            $.getJSON(url)
+                .done (function (data) {
+                    // TODO:  add script to add data to the DOM
+                    console.log(data);
+
+                    // loop through the records
+                    
+                $.each(data, function(index, value){
+                   var html = "<div>" +
+                   "<h1>" + value.type_of_service_request + "</h1>" +
+                   "<p>Status: " + value.status + "</p>" + 
+                   "<p>Creation Date: " + value.creation_date + "</p>" +
+                   "<p>Community Area: " + value.community_area + "</p>" +
+                   "<p>Police District: " + value.police_district + 
+                   "<p>Ward: " + value.ward + "</p>" +
+                   "<p>Service Request Number: " + value.service_request_number + "</p>" +
+                   "<p>Street Address: " + value.street_address + "</p>" +
+                   "</div>";
+                   
+                   $("body").append(html);
+                   
+                });
+                    
+                    
+                    
+
+                    
+                })
+            
+            
+        )
+        
+        
+    </script>
+    </body>
+</html>
