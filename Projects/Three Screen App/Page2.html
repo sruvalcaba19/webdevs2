@@ -1,0 +1,92 @@
+
+<html>
+    <head>
+        <title>Beach Weather</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            p, h1 {
+                font-family:times new roman;
+            }
+            p {
+                color:Green;font-size:1.5em;line-height:em; margin-left: 24px;
+            }
+            pre {
+                font-size: 2em;
+            }
+            div { 
+                border: 10px solid black; margin: 4px; border-radius: 5px; background-color: yellow
+            }
+            body {
+                background-color:Purple;
+                
+            }
+            #title {
+                color:yellow;
+            }
+            .input[type=text] {
+                width: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="title">Beach Weather Near You!</h1>
+        <input type="text" id='input' name="search" placeholder="Search Beach">
+    <button id='submit'>Search</button>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+/*
+This script retrieves 311 pot hole service request data for 
+from the 
+City of Chicago Data Portal
+777
+This script doesn't update the DOM.
+
+*/
+
+$('#submit').click(function(){
+    var baseURL = 'https://data.cityofchicago.org/resource/ygr5-vcbg.json';
+    var license = $('#input').val();
+    var filters = '?plate=' + license;
+// full URL
+    var url = baseURL + filters;
+    console.log(url);
+        console.log(license)
+
+// jQuery command to retrieve json data
+
+$.getJSON(url)
+.done (function (data) {
+// TODO: add script to add data to the DOM
+console.log(data);
+    var inspections = data
+// loop through the records
+        if (inspections.length==0) {
+                var html = '<p>Sorry there were no results</p>'
+$("body").append(html)
+}
+else {
+    $.each(data, function(index, value){
+        var html = "<div>" + "<hr>" + "<h1>License Plate #: " + value.plate + "</h1>" +
+            "<p>Color: " + value.color + "</p>" + 
+            "<p>Make: " + value.make + "</p>" +
+            "<p>State: " + value.state + "</p>" +
+            "<p>Tow Date: " +value.tow_date + "</p>" +
+            "<p>Towed to Address: " + value.towed_to_address +"</p>" +
+            "<p>Inventory Number: " + value.inventory_number + "</p>" +
+            "<p>Tow Facility Phone: " + value.tow_facility_phone + "</p>" +
+            "<hr>" +
+                "</div>"
+                "</div>";
+
+        $("body").append(html);
+
+    });
+            }
+                      })
+
+                                     })
+
+</script>
+    </body>
+</html> 
