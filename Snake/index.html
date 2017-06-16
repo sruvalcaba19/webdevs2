@@ -1,0 +1,118 @@
+
+<html>
+    <head>
+        <title>JS Snake </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <style>
+            #myCanvas {
+                border: 5px solid black; 
+                background-color:lightgreen;
+            }
+        </style>
+    
+    </head>
+    <body>
+        <h1>Snake for Beginners: Click screen twice to start moving</h1>
+        <canvas id="myCanvas" width = "600" height = "600"></canvas>
+        <script>
+                var canvas = $("#myCanvas")[0];
+                var ctx = canvas.getContext("2d");
+                var width = $("#myCanvas").width();
+                var height = $("#myCanvas").height();
+                
+                var cw = 10;
+                var d;
+                var food;
+                var score = 0;
+                
+                var snakeArray;
+                
+                var d ="right";
+                
+                function createSnake() {
+                    var length = 10;
+                    snakeArray = [];
+                    for(var i = length-1;i>=0;i--) {
+                        snakeArray.push({x: i,y: 0});
+                    }
+                }
+                
+                createSnake();
+                
+                function createFood() {
+                    food = {
+                        x: Math.round(Math.random()*(width-cw)/cw),
+                        y: Math.round(Math.random()*(height-cw)/cw)
+                        
+                    }
+                    
+                }
+                
+                createFood();
+                
+                function paintCell(x,y) {
+                    ctx.fillStyle = "#045B2E";
+                    ctx.fillRect(x*cw,y*cw,cw,cw);
+                    ctx.strokeStyle = "purple";
+                    ctx.strokeRect(x*cw,y*cw,cw,cw);
+                }
+                
+                paintCell(0,0)
+                
+                function paint() {
+                    ctx.fillStyle = "yellow";
+                    ctx.fillRect(0,0,width,height);
+                    ctx.strokeStyle = "white";
+                    ctx.strokeRect(0,0,width,height);
+                    for(var i = 0; i <snakeArray.length; i++) {
+                        var c=snakeArray[i];
+                        paintCell(c.x, c.y);
+                    }
+                    var nx = snakeArray[0].x;
+                    var ny = snakeArray[0].y;
+                    console.log(d);
+                    if(d=="right")nx++;
+                    else if(d=="left")nx--;
+                    else if(d=="down")ny++;
+                    else if(d="up")ny--;
+                    if (nx==food.x && ny==food.y) {
+                        var tail = {x:nx, y:ny}
+                        createFood();
+                    } else {
+                        var tail = snakeArray.pop();
+                        tail.x = nx; tail.y = ny;
+                    }
+                    ctx.font = "16px Arial";
+                    ctx.fillStyle = "black";
+                    ctx.fillText("Score: " + score, 8, 20);
+                    snakeArray.unshift(tail);
+                    paintCell(food.x,food.y)
+                    
+                    
+                    function checkCollision(x,y,arr) {
+                        for (var i = 0; i<arr.length; i++) {
+                            if (arr[i].x==x && arr[i].y == y) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    if(nx<-1 || nx>(width/cw) || ny<-1 || ny>(height/cw) ) {
+                        alert("GAME OVER");
+                        document.location.reload();
+                    }
+                }
+                
+                if (typeof game_loop != "undefined") clearInterval(game_loop);
+                game_loop = setInterval(paint, 60);
+                
+                $(document).keydown(function(e) {
+                    var key = e.which;
+                    if (key=="37" && d!=="right"){d="left"}
+                    else if(key=="38" && d!=="down"){d="up"}
+                    else if(key=="39" && d!=="left"){d="right"}
+                    else if(key=="40" && d!=="up"){d="down"}
+                })
+        </script>
+    </body>
+</html>
